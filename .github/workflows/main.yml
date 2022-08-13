@@ -1,0 +1,29 @@
+# https://docs.github.com/en/actions
+name: hallo-lambda-ci
+on:
+  push:
+    branches: [ "deploy_py_*" ]
+jobs:
+  # This workflow contains a single job called "build"
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+        with:
+          ref: 'master'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+          cache: 'pip' # caching pip dependencies
+      - name: GET FILE LIST IN CURRENT DIR
+        run: |
+          echo -(started) GET FILE LIST IN CURRENT DIR --------------------
+          ls
+          echo -(done)-----------------------------------------------------
+      - name: INSTALLING PYTHON REQUIREMENTS
+        run: pip install -r requirements.txt
+      - name: PACK
+        run: |
+          echo Add other actions to build,
+          echo test, and deploy your project.
