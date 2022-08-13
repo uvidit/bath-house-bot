@@ -1,7 +1,3 @@
-"""
-Simple Telegram Bot on Aiogram framework using AWS API Gateway & Lambda.
-"""
-
 import asyncio
 import logging
 import os
@@ -11,7 +7,8 @@ TOKEN=os.environ.get('TOKEN')
 
 # Logger initialization and logging level setting
 log = logging.getLogger(__name__)
-log.setLevel(os.environ.get('LOGGING_LEVEL', 'INFO').upper())
+# log.setLevel(os.environ.get('LOGGING_LEVEL', 'INFO').upper())
+log.setLevel(os.environ.get('LOGGING_LEVEL', 'DEBUG').upper())
 
 # Handlers
 async def start(message: types.Message):
@@ -44,7 +41,7 @@ async def main(event):
     and launching subsequent functions.
     """
     # Bot and dispatcher initialization
-    bot = Bot(os.environ.get('TOKEN'))
+    bot = Bot(TOKEN)
     dp = Dispatcher(bot)
     await register_handlers(dp)
     await process_event(event, dp)
