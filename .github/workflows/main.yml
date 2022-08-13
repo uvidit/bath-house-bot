@@ -20,6 +20,7 @@ jobs:
         run: |
           chmod +x env_init.sh
           ./env_init.sh
+      # https://github.com/marketplace/actions/aws-lambda-deploy
       - name: Deploying Lambda to AWS
         uses: appleboy/lambda-action@master
         with:
@@ -27,9 +28,11 @@ jobs:
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws_region: ${{ secrets.AWS_REGION }}
           function_name: lambdo-bot
-          zip_file: py_lambda_package.zip
-          timeout: 20
+          # zip_file: py_lambda_package.zip
+          source: hello-lambda.py # - file list you want to zip
+          timeout: 3 # The amount of time that Lambda allows a function to run before stopping it. The default is 3 seconds. The maximum allowed value is 900 seconds.
           handler: hello-lambda.lambda_handler
           role: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GH_ACTIONS_bath_house_bot_role
           runtime: python3.8
           memory_size: 128
+          # layers:  # - A list of function layers, to add to the function's execution environment. Specify each layer by its ARN, including the version.
