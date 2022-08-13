@@ -14,11 +14,10 @@ def send_message(chat_id, text):
         "https://api.telegram.org/bot" + TOKEN + "/sendMessage",
         params=params
     )
-
 def process_event(event):
-    message = json.loads(event['body'])
-    chat_id = message['message']['chat']['id']
-    text = message['message']['text']
+    message = event['message']
+    chat_id = message['chat']['id']
+    text = message['text']
     if text == "/start":
         send_message(chat_id, "Hello, I am echo bot!")
         return
