@@ -25,7 +25,9 @@ jobs:
       - name: Deploy code to Lambda
         uses: denzalman/lambda-python-action@v1.1.0
         with:
+#          arn:aws:lambda:eu-west-2:527825158745:layer:telegram-layer:1
 #          lambda_layer_arn: 'arn:aws:lambda:${{ secrets.AWS_REGION }}:${{ secrets.AWS_ACCOUNT_ID }}:layer:<lambda_layer_name>'
+          lambda_layer_arn: 'arn:aws:lambda:${{ secrets.AWS_REGION }}:${{ secrets.AWS_ACCOUNT_ID }}:layer:telegram-layer'
           lambda_function_name: 'lambdo-bot'
           lambda_region: ${{ secrets.AWS_REGION }}
           requirements_txt: 'requirements.txt'
