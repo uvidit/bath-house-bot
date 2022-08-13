@@ -28,7 +28,7 @@ jobs:
           aws_region: ${{ secrets.AWS_REGION }}
           function_name: lambdo-bot
           zip_file: py_lambda_package.zip
-          timeout: 10
+          timeout: 20
           handler: hello-lambda.lambda_handler
           role: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GH_ACTIONS_bath_house_bot_role
           runtime: python3.8
