@@ -30,6 +30,6 @@ jobs:
           zip_file: py_lambda_package.zip
           timeout: 10
           handler: lambda_handler
-          role: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/service-role/lambdo-bot-role-59qs3ws9
+          role: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GH_ACTIONS_bath_house_bot_role
           runtime: python3.8
-          #          memory_size: 128
+          memory_size: 128
