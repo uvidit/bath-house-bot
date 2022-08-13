@@ -2,7 +2,7 @@
 PYTHON_VIRTUAL_ENV_NAME=py_venv
 PY_LAMBDA_DEPENDENCIES=py_lambda_dependencies
 PY_LAMBDA_ZIP_NAME='py_lambda_package.zip'
-PY_LAMBDA_FILE_NAME='hello-lambda.py'
+PY_LAMBDA_FILE_NAME='lambda_function.py'
 
 rm -rf ${PYTHON_VIRTUAL_ENV_NAME} ${PY_LAMBDA_DEPENDENCIES} ${PY_LAMBDA_ZIP_NAME}
 

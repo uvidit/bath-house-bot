@@ -12,14 +12,15 @@ jobs:
       - uses: actions/checkout@v3
 #        with:
 #          ref: 'master'
-      - uses: actions/setup-python@v4
-        with:
-          python-version: '3.8'
-          cache: 'pip' # caching pip dependencies
-      - name: Building and Packaging sources
-        run: |
-          chmod +x env_init.sh
-          ./env_init.sh
+
+#      - uses: actions/setup-python@v4
+#        with:
+#          python-version: '3.8'
+#          cache: 'pip' # caching pip dependencies
+#      - name: Building and Packaging sources
+#        run: |
+#          chmod +x env_init.sh
+#          ./env_init.sh
 
       # https://github.com/marketplace/actions/aws-lambda-python-deploy
       - name: Deploy code to Lambda
@@ -44,7 +45,7 @@ jobs:
 #          aws_region: ${{ secrets.AWS_REGION }}
 #          function_name: lambdo-bot
 #          # zip_file: py_lambda_package.zip
-#          source: hello-lambda.py # - file list you want to zip
+#          source: lambda_function.py # - file list you want to zip
 #          timeout: 3 # The amount of time that Lambda allows a function to run before stopping it. The default is 3 seconds. The maximum allowed value is 900 seconds.
 #          handler: hello-lambda.lambda_handler
 #          role: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GH_ACTIONS_bath_house_bot_role
