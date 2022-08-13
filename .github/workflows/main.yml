@@ -12,18 +12,28 @@ jobs:
       - uses: actions/checkout@v3
 #        with:
 #          ref: 'master'
+      - name: GET FILE LIST IN CURRENT DIR
+        run: |
+          echo -Started 'GET FILE LIST IN CURRENT DIR' --------------------
+          ls
+          echo -Done-------------------------------------------------------
       - uses: actions/setup-python@v4
         with:
           python-version: '3.8'
           cache: 'pip' # caching pip dependencies
       - name: GET FILE LIST IN CURRENT DIR
         run: |
-          echo -(started) GET FILE LIST IN CURRENT DIR --------------------
+          echo -Started 'GET FILE LIST IN CURRENT DIR' --------------------
           ls
-          echo -(done)-----------------------------------------------------
+          echo -Done-------------------------------------------------------
       - name: INSTALLING PYTHON REQUIREMENTS
         run: pip install -r requirements.txt
-      - name: PACK
+      - name: GET FILE LIST IN CURRENT DIR
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          echo -Started 'GET FILE LIST IN CURRENT DIR' --------------------
+          ls
+          echo -Done-------------------------------------------------------
+#      - name: PACK
+#        run: |
+#          echo Add other actions to build,
+#          echo test, and deploy your project.
