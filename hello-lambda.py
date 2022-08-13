@@ -1,34 +1,32 @@
-import os, logging
-from aiogram import Bot, Dispatcher, executor, types
+#!/usr/bin/python
+import os, json, requests
 
 TOKEN=os.environ.get('TOKEN')
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+def send_message(chat_id, text):
+    params = {
+        "text": text,
+        "chat_id": chat_id,
+        "parse_mode": "MarkdownV2"
+    }
+    requests.get(
+        "https://api.telegram.org/bot" + TOKEN + "/sendMessage",
+        params=params
+    )
 
-# Initialize bot and dispatcher
-bot = Bot(token=TOKEN)
-dp = Dispatcher(bot)
+def process_event(event):
+    message = json.loads(event['body'])
+    chat_id = message['message']['chat']['id']
+    text = message['message']['text']
+    if text == "/start":
+        send_message(chat_id, "Hello, I am echo bot!")
+        return
+    if text is None:
+        return
+    send_message(chat_id, text)
 
-@dp.message_handler()
-async def lambda_handler(message: types.Message):
-    await message.answer(message.text)
-
-
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)
-
-
-# URL = "https://api.telegram.org/bot{}/".format(TELE_TOKEN)
-# def send_message(text, chat_id):
-#     final_text = "You said: " + text
-#     url = URL + "sendMessage?text={}&chat_id={}".format(final_text, chat_id)
-#     requests.get(url)
-# def lambda_handler(event, context):
-#     message = json.loads(event['body'])
-#     chat_id = message['message']['chat']['id']
-#     reply = message['message']['text']
-#     send_message(reply, chat_id)
-#     return {
-#         'statusCode': 200
-#     }
+def lambda_handler(event, context):
+    process_event(event)
+    return {
+        'statusCode': 200
+    }
