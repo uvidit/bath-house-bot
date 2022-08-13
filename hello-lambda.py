@@ -1,5 +1,7 @@
 #!/usr/bin/python
-import os, json, requests
+import os
+import json
+import requests
 
 TOKEN=os.environ.get('TOKEN')
 
