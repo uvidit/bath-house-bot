@@ -2,32 +2,18 @@
 name: hallo-lambda-ci
 on:
   push:
-    branches: [ "deploy_py_*" ]
+    branches: [ "master" ]
 jobs:
-  # This workflow contains a single job called "build"
   build:
     runs-on: ubuntu-latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
 #        with:
 #          ref: 'master'
-
-#      - uses: actions/setup-python@v4
-#        with:
-#          python-version: '3.8'
-#          cache: 'pip' # caching pip dependencies
-#      - name: Building and Packaging sources
-#        run: |
-#          chmod +x env_init.sh
-#          ./env_init.sh
-
       # https://github.com/marketplace/actions/aws-lambda-python-deploy
       - name: Deploy code to Lambda
         uses: denzalman/lambda-python-action@v1.1.0
         with:
-#          arn:aws:lambda:eu-west-2:527825158745:layer:telegram-layer:1
-#          lambda_layer_arn: 'arn:aws:lambda:${{ secrets.AWS_REGION }}:${{ secrets.AWS_ACCOUNT_ID }}:layer:<lambda_layer_name>'
           lambda_layer_arn: 'arn:aws:lambda:${{ secrets.AWS_REGION }}:${{ secrets.AWS_ACCOUNT_ID }}:layer:telegram-layer'
           lambda_function_name: 'lambdo-bot'
           lambda_region: ${{ secrets.AWS_REGION }}
@@ -35,20 +21,3 @@ jobs:
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-
-#      # https://github.com/marketplace/actions/aws-lambda-deploy
-#      - name: Deploying Lambda to AWS
-#        uses: appleboy/lambda-action@master
-#        with:
-#          aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#          aws_region: ${{ secrets.AWS_REGION }}
-#          function_name: lambdo-bot
-#          # zip_file: py_lambda_package.zip
-#          source: lambda_function.py # - file list you want to zip
-#          timeout: 3 # The amount of time that Lambda allows a function to run before stopping it. The default is 3 seconds. The maximum allowed value is 900 seconds.
-#          handler: hello-lambda.lambda_handler
-#          role: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GH_ACTIONS_bath_house_bot_role
-#          runtime: python3.8
-#          memory_size: 128
-#          # layers:  # - A list of function layers, to add to the function's execution environment. Specify each layer by its ARN, including the version.
