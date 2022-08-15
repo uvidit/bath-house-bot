@@ -136,7 +136,7 @@ async def currency_exchange_mantion(message: types.Message):
         for idx, header in enumerate(headers):
             if header:
                 res.append(f'{header}: {row[idx]}')
-    await say_something_useless("\n".join(res))
+    await message.reply("\n".join(res))
 
 
 @dp.message_handler(commands=['joke_chuck_norris', 'story_about'])
