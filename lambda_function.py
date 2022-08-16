@@ -114,14 +114,8 @@ async def fact_mantion(message: types.Message):
 
 
 def parse_currency_label(m : str) -> str:
-    # USD_PATTERN = '(дол+ар)|(бакс)|(капуст)|(бакинск)|(usd)|(dol+ar)|(baks)'
-    # COMMON_CURRENCY_EXCH_PATTERN = '(курс)|(валют)|(обменк)'
-    # usd_matcher = re.compile(f'{USD_PATTERN}', re.IGNORECASE)
-    # common_currency_exch_matcher = re.compile(f'{COMMON_CURRENCY_EXCH_PATTERN}', re.IGNORECASE)
-    EUR_PATTERN = '(евр(о|и|ы))|(eur)'
-    PLN_PATTERN = '(злот)|(zlot)|(pln)'
-    eur_matcher = re.compile(f'{EUR_PATTERN}', re.IGNORECASE)
-    pln_matcher = re.compile(f'{PLN_PATTERN}', re.IGNORECASE)
+    eur_matcher = re.compile(r'(евр([оиы]))|(eur)', re.IGNORECASE)
+    pln_matcher = re.compile(r'(злот)|(zlot)|(pln)', re.IGNORECASE)
     if pln_matcher.search(m):
         return 'PLN'
     elif eur_matcher.search(m):
