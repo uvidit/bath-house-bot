@@ -131,12 +131,11 @@ def get_currency_meta_from_exchange_rate_provider(cur_label : str) -> dict:
     return cur_meta if len(cur_meta) else {1: "USD - долар"}
 
 
-@dp.message_handler(regexp='(([Кк])урс)|(([Дд])ол+ар)|(([Бб])акс)|(([Ее])вр([оиы]))|(([Вв])алют)|(([Оо])бменк)|'
-                           '(([Кк])апуст)|(([Ee])ur)|(([Pp])ln)|(([Zz])lot)|(([Uu])sd)')
-async def currency_exchange_mantion(message: types.Message):
+def get_currency_rates_from_exchange_rate_provider(currency_meta : dict):
+    from bs4 import BeautifulSoup
     resp = requests.get("https://kurs.com.ua/ajax/organizationsTable?"
                         "type=cash"
-                        "&currency_from=1"
+                        f"&currency_from={list(currency_meta.keys())[0]}"
                         "&organizations=pov"
                         "&city=1217"
                         "&show_optimal=1"
@@ -149,13 +148,21 @@ async def currency_exchange_mantion(message: types.Message):
                soup.find_all('th')]
     rows = [[cell.get_text("|", strip=True) for cell in row.find_all('td')] for row in soup.tbody.find_all('tr')]
     res = []
-    res.append(f' *** {title}:')
+    res.append(f' *** {title}:\n{list(currency_meta.values())[0]}')
     for row in rows:
         res.append('-------------------------')
         for idx, header in enumerate(headers):
             if header:
                 res.append(f'{header}: {row[idx]}')
-    await message.reply("\n".join(res))
+    return "\n".join(res)
+
+
+@dp.message_handler(regexp='(([Кк])урс)|(([Дд])ол+ар)|(([Бб])акс)|(([Ее])вр([оиы]))|(([Вв])алют)|(([Оо])бменк)|'
+                           '(([Кк])апуст)|(([Ee])ur)|(([Pp])ln)|(([Zz])lot)|(([Uu])sd)')
+async def currency_exchange_mantion(message: types.Message):
+    c_label = parse_currency_label(message.text)
+    c_meta = get_currency_meta_from_exchange_rate_provider(c_label)
+    await message.reply(get_currency_rates_from_exchange_rate_provider(c_meta))
 
 
 @dp.message_handler(commands=['joke_chuck_norris', 'story_about'])
