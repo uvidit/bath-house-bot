@@ -1,4 +1,4 @@
-import json, logging, os, requests
+import json, logging, os, re, requests
 from aiogram import Bot, Dispatcher, executor, types
 from random import randint
 from bs4 import BeautifulSoup
@@ -113,7 +113,32 @@ async def fact_mantion(message: types.Message):
     await say_something_useless(message)
 
 
-@dp.message_handler(regexp='((К|к)урс)|((Д|д)оллар)|((Б|б)акс)|((Е|е)вро)|((В|в)алют)|((О|о)бменк)')
+def parse_currency_label(m : str) -> str:
+    # USD_PATTERN = '(дол+ар)|(бакс)|(капуст)|(бакинск)|(usd)|(dol+ar)|(baks)'
+    # COMMON_CURRENCY_EXCH_PATTERN = '(курс)|(валют)|(обменк)'
+    # usd_matcher = re.compile(f'{USD_PATTERN}', re.IGNORECASE)
+    # common_currency_exch_matcher = re.compile(f'{COMMON_CURRENCY_EXCH_PATTERN}', re.IGNORECASE)
+    EUR_PATTERN = '(евр(о|и|ы))|(eur)'
+    PLN_PATTERN = '(злот)|(zlot)|(pln)'
+    eur_matcher = re.compile(f'{EUR_PATTERN}', re.IGNORECASE)
+    pln_matcher = re.compile(f'{PLN_PATTERN}', re.IGNORECASE)
+    if pln_matcher.search(m):
+        return 'PLN'
+    elif eur_matcher.search(m):
+        return 'EUR'
+    else:
+        return 'USD'
+
+
+def get_currency_meta_from_exchange_rate_provider(cur_label : str) -> dict:
+    resp = requests.get("https://kurs.com.ua/ajax/organizationsTable?organizations=pov")
+    currencies = resp.json()['currencies']
+    cur_meta =  {k: v for k, v in currencies.items() if v.startswith(cur_label)}
+    return cur_meta if len(cur_meta) else {1: "USD - долар"}
+
+
+@dp.message_handler(regexp='(([Кк])урс)|(([Дд])ол+ар)|(([Бб])акс)|(([Ее])вр([оиы]))|(([Вв])алют)|(([Оо])бменк)|'
+                           '(([Кк])апуст)|(([Ee])ur)|(([Pp])ln)|(([Zz])lot)|(([Uu])sd)')
 async def currency_exchange_mantion(message: types.Message):
     resp = requests.get("https://kurs.com.ua/ajax/organizationsTable?"
                         "type=cash"
@@ -130,7 +155,7 @@ async def currency_exchange_mantion(message: types.Message):
                soup.find_all('th')]
     rows = [[cell.get_text("|", strip=True) for cell in row.find_all('td')] for row in soup.tbody.find_all('tr')]
     res = []
-    res.append(f' ***: {title}:')
+    res.append(f' *** {title}:')
     for row in rows:
         res.append('-------------------------')
         for idx, header in enumerate(headers):
