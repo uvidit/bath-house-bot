@@ -131,7 +131,7 @@ def get_currency_meta_from_exchange_rate_provider(cur_label : str) -> dict:
     return cur_meta if len(cur_meta) else {1: "USD - долар"}
 
 
-def get_currency_rates_from_exchange_rate_provider(currency_meta : dict):
+def get_currency_rates_from_exchange_rate_provider(currency_meta: dict, res_items_limit: int = 1):
     from bs4 import BeautifulSoup
     resp = requests.get("https://kurs.com.ua/ajax/organizationsTable?"
                         "type=cash"
@@ -149,7 +149,7 @@ def get_currency_rates_from_exchange_rate_provider(currency_meta : dict):
     rows = [[cell.get_text("|", strip=True) for cell in row.find_all('td')] for row in soup.tbody.find_all('tr')]
     res = []
     res.append(f' *** {title}:\n{list(currency_meta.values())[0]}')
-    for row in rows:
+    for row in rows[:res_items_limit:]:
         res.append('-------------------------')
         for idx, header in enumerate(headers):
             if header:
