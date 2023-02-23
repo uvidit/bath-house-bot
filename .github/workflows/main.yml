@@ -5,14 +5,12 @@ on:
     branches: [ "master" ]
 jobs:
   build:
-    runs-on: ubuntu:21.10
+    runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v3
 #        with:
 #          ref: 'master'
       # https://github.com/marketplace/actions/aws-lambda-python-deploy
-      - name: git_config_workaround
-        run: sudo /usr/bin/git config --system --add safe.directory /github/workspace
       - name: Deploy code to Lambda
         uses: denzalman/lambda-python-action@v1.1.0
         with:
