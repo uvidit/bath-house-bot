@@ -11,6 +11,8 @@ jobs:
 #        with:
 #          ref: 'master'
       # https://github.com/marketplace/actions/aws-lambda-python-deploy
+      - name: gut workeround
+        run: git config --global --add safe.directory /github/workspace
       - name: Deploy code to Lambda
         uses: denzalman/lambda-python-action@v1.1.0
         with:
