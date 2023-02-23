@@ -13,6 +13,8 @@ jobs:
       # https://github.com/marketplace/actions/aws-lambda-python-deploy
       - name: git workeround
         run: git config --global --add safe.directory /github/workspace
+      - name: git workeround 2
+        run: apt-get install git=2.38.1 -y
       - name: Deploy code to Lambda
         uses: denzalman/lambda-python-action@v1.1.0
         with:
