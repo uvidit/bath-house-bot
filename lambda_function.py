@@ -97,7 +97,7 @@ input_story_about_jason_for_chat_gpt: str = """
     """
 
 
-async def get_jason_joke_from_chat_gpt():
+def get_jason_joke_from_chat_gpt():
     response = openai.Completion.create(
         model="text-davinci-003",
         prompt=input_story_about_jason_for_chat_gpt,
@@ -109,7 +109,7 @@ async def get_jason_joke_from_chat_gpt():
     )
 
     # send response to chat
-    await response.choices[0].text
+    return response.choices[0].text
 
 
 @dp.message_handler(commands=['jason'])
