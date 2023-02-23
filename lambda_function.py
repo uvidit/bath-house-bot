@@ -1,19 +1,24 @@
-import json, logging, os, re, requests
+import json, logging, os, re, requests, openai
 from aiogram import Bot, Dispatcher, executor, types
 from random import randint
 from bs4 import BeautifulSoup
 
+
 # =====================================================================================================================
 # = VARIABLES, LOGGING ================================================================================================
 API_TOKEN = os.environ.get('TOKEN')
+OPENAI_TOKEN = os.environ.get('OPENAI_TOKEN')
 log = logging.getLogger(__name__)
 log.setLevel(os.environ.get('LOGGING_LEVEL', 'INFO').upper())
 
 # Here you can override the token to use the bot for debugging - don't forget to roll-back that
 # API_TOKEN = 'someTokenThere'
+# OPENAI_TOKEN = 'someTokenForChatGpt'
 bot = Bot(token=API_TOKEN)
 dp = Dispatcher(bot)
 message_chat_id = -1
+openai.api_key = OPENAI_TOKEN
+
 polls_db = {}  # save poll data results here
 
 # =====================================================================================================================
@@ -62,14 +67,59 @@ def get_random_jason_get():
     return jason_geo[randint(0, len(jason_geo) - 1)]
 
 
+input_story_about_jason_for_chat_gpt: str = """
+    Жасон - наш добрый друг и очень очень хороший парень! У него есть авто Ниссан Ноут, девушка Алла.\n
+    Он до сих пор живет в высоком доме на Северной Салтовке в Харькове во время военных действий и не хочет ехать оттуда.\n 
+    Его друзья часто уговаривают его уехать из Харькова во избежание мобилизации и других рисков войны.\n 
+    Все хотят знать где Жассон. Он, к сожалению, трудоголик. Он лучше всех может посоветовать сериал.\n 
+    Он любит пиво из Гершера, часто держит Андрея за руку, у них особоя эмоциональная алко связь.\n
+    Он очень инертен, и не хочет менять работу - хотя многие друзья ему советуют это сделать. \n   
+    Он любит сериалы и компьютерные игры. \n   
+    Мы любим шутить над ним спрашивая часто о том, где он сейчас – и отвечаем разными шутками о его возможном местонахождении:\n 
+    - будет через 5 минут!\n 
+    - в пути...,\n
+    - Жасон, обнови статус!,    - \n
+    – никому не говори где он!\n 
+    - ничего без него не можете!,\n
+    - ожидайте! вас много - а он один!,\n
+    – он самый лучший.\n 
+    - подождем его!,\n
+    – позовите его!\n 
+    - позовите Жасона!,\n
+    - работает!\n 
+    - работу работает! .... не то что вы - тунеядцы!,\n
+    - скоро будет...,\n
+    - Так где Жасон?\n 
+    - только он знает толк в кальянах!,\n
+    - точные координаты Жасона дорогого стОят,\n
+    - ща...5 минут турецкий (с),\n
+    Ответь шуткой, но чтоб он не обиделся. Ограничь ответ максимум 30ю словами.
+    """
+
+
+async def get_jason_joke_from_chat_gpt():
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=input_story_about_jason_for_chat_gpt,
+        temperature=0.31,
+        max_tokens=834,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+
+    # send response to chat
+    await response.choices[0].text
+
+
 @dp.message_handler(commands=['jason'])
 async def send_welcome(message: types.Message):
-    await message.reply(f"Где Жасон? (с)\n{get_random_jason_get()}")
+    await message.reply(f"Где Жасон? (с)\n{get_jason_joke_from_chat_gpt()}")
 
 
 @dp.message_handler(regexp='(((J|j)(a|A|)son)|((Д|д|)(Ж|ж|)(а|А|Е|е)(Й|й|)(сон)))')
 async def jason_mantion(message: types.Message):
-    await message.reply(text=f"а где Жасон!? (с)\n{get_random_jason_get()}")
+    await message.reply(text=f"а где Жасон!? (с)\n{get_jason_joke_from_chat_gpt()}")
 
 
 @dp.message_handler(commands=['how_much'])
